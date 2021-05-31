@@ -12,6 +12,25 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 
 import it.polito.tdp.PremierLeague.db.PremierLeagueDAO;
 
-public class Model {
-	
+public class Model
+{
+	PremierLeagueDAO dao;
+	Graph<Match, DefaultWeightedEdge> grafo;
+
+	public Model()
+	{
+		dao = new PremierLeagueDAO();
+	}
+
+	public String creaGrafo(int min)
+	{
+		this.grafo = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+		
+		// vertici
+		List<Match> vertici = this.dao.getVertici(min);
+		Graphs.addAllVertices(this.grafo, vertici);
+		
+		
+		return "\nVertici: " + this.grafo.vertexSet().size() + "\nArchi: " + this.grafo.edgeSet().size();
+	}
 }
