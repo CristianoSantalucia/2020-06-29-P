@@ -76,7 +76,7 @@ public class FXMLController
 			return; 
 		}
 		
-		String result = this.model.creaGrafo(mese);
+		String result = this.model.creaGrafo(min, mese);
 		this.txtResult.setText(result);
 	}
 	

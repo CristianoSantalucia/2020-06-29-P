@@ -2,28 +2,29 @@ package it.polito.tdp.PremierLeague.model;
 
 public class Adiacenza
 {
-	private Match m1;
-	private Match m2;
+	private int m1;
+	private int m2;
 	private int peso;
-	public Adiacenza(Match m1, Match m2, int peso)
+	public Adiacenza(int m1, int m2, int peso)
 	{
+		super();
 		this.m1 = m1;
 		this.m2 = m2;
 		this.peso = peso;
 	}
-	public Match getM1()
+	public int getM1()
 	{
 		return m1;
 	}
-	public void setM1(Match m1)
+	public void setM1(int m1)
 	{
 		this.m1 = m1;
 	}
-	public Match getM2()
+	public int getM2()
 	{
 		return m2;
 	}
-	public void setM2(Match m2)
+	public void setM2(int m2)
 	{
 		this.m2 = m2;
 	}
@@ -34,5 +35,5 @@ public class Adiacenza
 	public void setPeso(int peso)
 	{
 		this.peso = peso;
-	} 
+	}
 }

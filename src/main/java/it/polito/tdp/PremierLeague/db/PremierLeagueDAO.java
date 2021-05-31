@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import it.polito.tdp.PremierLeague.model.Action;
 import it.polito.tdp.PremierLeague.model.Adiacenza;
 import it.polito.tdp.PremierLeague.model.Match;
@@ -107,59 +109,60 @@ public class PremierLeagueDAO
 		}
 	}
 
-	public List<Match> getVertici(int min)
+	public void getVertici(Map<Integer, Match> matches, int mese)
 	{
-		String sql =  "SELECT m.MatchID, m.TeamHomeID, m.TeamAwayID, m.teamHomeFormation, m.teamAwayFormation, m.resultOfTeamHome, m.date, t1.Name, t2.Name "
-				+ "FROM matches AS m, teams AS t1, teams AS t2 "
+		String sql = "SELECT m.MatchID, m.TeamHomeID, m.TeamAwayID, m.teamHomeFormation, m.teamAwayFormation, m.resultOfTeamHome, m.date, t1.Name, t2.Name "
+				+ "FROM matches AS m, teams AS t1, teams AS t2 " 
 				+ "WHERE MONTH(m.Date) = ? "
 				+ "AND m.TeamHomeID = t1.TeamID AND m.TeamAwayID = t2.TeamID";
-		
-		List<Match> result = new ArrayList<Match>();
+
 		Connection conn = DBConnect.getConnection();
-		
+
 		try
 		{
 			PreparedStatement st = conn.prepareStatement(sql);
-			st.setInt(1, min);
+			st.setInt(1, mese);
 			ResultSet res = st.executeQuery();
-			
+
 			while (res.next())
 			{
-				Match match = new Match(res.getInt("m.MatchID"), res.getInt("m.TeamHomeID"), res.getInt("m.TeamAwayID"),
-						res.getInt("m.teamHomeFormation"), res.getInt("m.teamAwayFormation"),
-						res.getInt("m.resultOfTeamHome"), res.getTimestamp("m.date").toLocalDateTime(),
-						res.getString("t1.Name"), res.getString("t2.Name"));
-				
-				result.add(match);
+				if (!matches.containsKey(res.getInt("m.MatchID")))
+				{
+					Match m = new Match(res.getInt("m.MatchID"), res.getInt("m.TeamHomeID"),
+							res.getInt("m.TeamAwayID"), res.getInt("m.teamHomeFormation"),
+							res.getInt("m.teamAwayFormation"), res.getInt("m.resultOfTeamHome"),
+							res.getTimestamp("m.date").toLocalDateTime(), res.getString("t1.Name"),
+							res.getString("t2.Name"));
+
+					matches.put(m.getMatchID(), m);
+				}
 			}
 			conn.close();
-			return result;
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-			return null;
 		}
 	}
-	
+
 	public List<Adiacenza> getAdiacenze(int min, int mese)
 	{
-		String sql =  "SELECT a1.MatchID AS m1, a2.MatchID AS m2, COUNT(DISTINCT(a1.PlayerID)) AS peso "
-				+ "FROM actions AS a1, actions AS a2 "
+		String sql = "SELECT a1.MatchID AS m1, a2.MatchID AS m2, COUNT(DISTINCT(a1.PlayerID)) AS peso "
+				+ "FROM actions AS a1, actions AS a2 " 
 				+ "WHERE a1.PlayerID = a2.PlayerID "
-				+ "		AND a1.MatchID < a2.MatchID "
+				+ "		AND a1.MatchID < a2.MatchID " 
 				+ "		AND a1.TimePlayed >= ? "
-				+ "		AND a1.MatchID IN (SELECT m.MatchID "
+				+ "		AND a1.MatchID IN (SELECT m.MatchID " 
 				+ "									FROM matches AS m "
 				+ "									WHERE MONTH(m.Date) = ? ) "
-				+ "		AND a2.MatchID IN (SELECT m.MatchID "
+				+ "		AND a2.MatchID IN (SELECT m.MatchID " 
 				+ "									FROM matches AS m\n"
-				+ "									WHERE MONTH(m.Date) = ? ) "
+				+ "									WHERE MONTH(m.Date) = ? ) " 
 				+ "GROUP BY a1.MatchID, a2.MatchID";
-		
+
 		List<Adiacenza> result = new ArrayList<>();
 		Connection conn = DBConnect.getConnection();
-		
+
 		try
 		{
 			PreparedStatement st = conn.prepareStatement(sql);
@@ -167,12 +170,12 @@ public class PremierLeagueDAO
 			st.setInt(2, mese);
 			st.setInt(3, mese);
 			ResultSet res = st.executeQuery();
-			
+
 			while (res.next())
 			{
-//				 Adiacenza a = new Adiacenza(res.getInt("m1"), res.getInt("m2"), res.getInt("peso"));
-				
-//				result.add(match);
+				Adiacenza a = new Adiacenza(res.getInt("m1"), res.getInt("m2"), res.getInt("peso"));
+
+				result.add(a);
 			}
 			conn.close();
 			return result;
