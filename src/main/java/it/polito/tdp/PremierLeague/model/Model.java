@@ -33,7 +33,7 @@ public class Model
 		Graphs.addAllVertices(this.grafo, this.matches.values());
 		
 		// archi 
-		List<Adiacenza> adj = new ArrayList<>(this.dao.getAdiacenze(min, mese));
+		List<Adiacenza> adj = new ArrayList<>(this.dao.getArchi(min, mese));
 		for (Adiacenza a : adj)
 		{
 			Match m1 = this.matches.get(a.getM1());
@@ -49,6 +49,7 @@ public class Model
 	{
 		DefaultWeightedEdge bestE = null; 
 		Double bestPeso = 0.0; 
+		//migliore
 		for(DefaultWeightedEdge e : this.grafo.edgeSet())
 		{
 			Double peso = this.grafo.getEdgeWeight(e); 
@@ -58,6 +59,7 @@ public class Model
 				bestE = e; 
 			}
 		}
+		//come il migliore
 		List<DefaultWeightedEdge> lista = new ArrayList<>(); 
 		lista.add(bestE);
 		for (DefaultWeightedEdge e : this.grafo.edgeSet())
@@ -66,6 +68,7 @@ public class Model
 				if(!lista.contains(e))
 					lista.add(e); 
 		}
+		//stampa
 		String s = "\n\n"; 
 		for (DefaultWeightedEdge e : lista)
 		{

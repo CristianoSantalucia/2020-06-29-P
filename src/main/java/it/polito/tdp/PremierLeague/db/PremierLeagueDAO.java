@@ -192,18 +192,18 @@ public class PremierLeagueDAO
 	public List<Adiacenza> getArchi(int min, int mese)
 	{
 		String sql = "SELECT m1.MatchID AS id1, m2.MatchID AS id2, COUNT(*) AS peso "
-				+ "FROM matches m1, matches m2, players p, actions a1, actions a2 "
-				+ "WHERE m1.MatchID > m2.MatchID "
-				+ "AND a1.MatchID = m1.MatchID "
-				+ "AND a2.MatchID = m2.MatchID "
-				+ "AND p.PlayerID = a1.PlayerID "
-				+ "AND p.PlayerID = a2.PlayerID "
-				+ "AND a1.TimePlayed > ? "
-				+ "AND a2.TimePlayed > ? " 
-				+ "AND MONTH (m1.Date) = ? "
-				+ "AND MONTH (m2.Date) = ? "
-				+ "GROUP BY m1.MatchID, m2.MatchID "
-				+ "HAVING peso > 0 ";
+					+ "FROM matches m1, matches m2, players p, actions a1, actions a2 "
+					+ "WHERE m1.MatchID > m2.MatchID "
+					+ "AND a1.MatchID = m1.MatchID "
+					+ "AND a2.MatchID = m2.MatchID "
+					+ "AND p.PlayerID = a1.PlayerID "
+					+ "AND p.PlayerID = a2.PlayerID "
+					+ "AND a1.TimePlayed >= ? "
+					+ "AND a2.TimePlayed >= ? " 
+					+ "AND MONTH (m1.Date) = ? "
+					+ "AND MONTH (m2.Date) = ? "
+					+ "GROUP BY m1.MatchID, m2.MatchID "
+					+ "HAVING peso > 0 ";
 		
 		List<Adiacenza> result = new ArrayList<>();
 		Connection conn = DBConnect.getConnection();
