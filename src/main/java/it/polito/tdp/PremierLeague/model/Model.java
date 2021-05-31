@@ -42,6 +42,39 @@ public class Model
 				Graphs.addEdgeWithVertices(this.grafo, m1, m2, a.getPeso());
 		}
 		
-		return "\nVertici: " + this.grafo.vertexSet().size() + "\nArchi: " + this.grafo.edgeSet().size();
+		return "\n#Vertici: " + this.grafo.vertexSet().size() + "\n#Archi: " + this.grafo.edgeSet().size();
+	}
+	
+	public String getConMax()
+	{
+		DefaultWeightedEdge bestE = null; 
+		Double bestPeso = 0.0; 
+		for(DefaultWeightedEdge e : this.grafo.edgeSet())
+		{
+			Double peso = this.grafo.getEdgeWeight(e); 
+			if(peso > bestPeso)
+			{
+				bestPeso = peso; 
+				bestE = e; 
+			}
+		}
+		List<DefaultWeightedEdge> lista = new ArrayList<>(); 
+		lista.add(bestE);
+		for (DefaultWeightedEdge e : this.grafo.edgeSet())
+		{
+			if(this.grafo.getEdgeWeight(e) == bestPeso)
+				if(!lista.contains(e))
+					lista.add(e); 
+		}
+		String s = "\n\n"; 
+		for (DefaultWeightedEdge e : lista)
+		{
+			Match m1 = this.grafo.getEdgeSource(e);
+			Match m2 = this.grafo.getEdgeTarget(e);
+			s += "" + m1.toString() + " - ";
+			s += "" + m2.toString() + " (";
+			s += "" + this.grafo.getEdgeWeight(e) + ")\n"; 
+		}
+		return s; 
 	}
 }

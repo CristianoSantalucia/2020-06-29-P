@@ -74,7 +74,7 @@ public class FXMLController
 		{
 			this.txtResult.setText("ERRORE");
 			return; 
-		}
+		} 
 		
 		String result = this.model.creaGrafo(min, mese);
 		this.txtResult.setText(result);
@@ -82,7 +82,7 @@ public class FXMLController
 	
 	@FXML void doConnessioneMassima(ActionEvent event)
 	{
-	
+		txtResult.appendText(this.model.getConMax());
 	}
 
 	@FXML void doCollegamento(ActionEvent event)
